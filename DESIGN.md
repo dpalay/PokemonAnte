@@ -38,9 +38,9 @@ below is tuned to make losses sting without spiraling.
      a steep fee. The RNG chase is free; certainty costs money.
    A **Bounty Board** (Registry feature) tracks which binder holds what and
    where that trainer is.
-2. **Party floor.** You cannot enter an ante battle with fewer than 2 party
-   Pokémon. At 1, you're directed to the pack shop; a pity-priced **Starter
-   Pack** is always affordable.
+2. **Ownership floor.** You may never stake your last Pokémon: ante battles
+   require owning at least 2 total (deck + binder). At 1, you're directed to
+   the pack shop; a pity-priced **Starter Pack** is always affordable.
 3. **Badge-scaled levels.** All Pokémon — yours and won antes — are capped or
    scaled to a level determined by badge count. Critical rule: it makes every
    won Pokémon immediately viable (churn is fun, not punishing) and replaces
@@ -68,11 +68,22 @@ soft-reset before a loss saves. Countermeasures:
   battles 6v6 and maximizes drama when your ace is drawn.
 - **Reveal before turn 1.** Both antes are shown at battle start, before the
   first move. The tension of "my starter is on the line" is the whole game.
-- **Party = deck, PC = binder.** Ante draws only from the party of 6. The PC
-  box is your collection — perfectly safe, but boxed Pokémon can't fight.
-  This is the *only* ante protection in the game. No ante-proof slots, no
-  protected starter: strength requires exposure. The bounty loop is the
-  humane version of protection.
+- **Deck-building: bring 30, choose X ≤ 6.** Your binder is the pool; your
+  **deck** is up to 6 Pokémon chosen from it (VGC's "bring 6 pick 4,"
+  scaled up). Ante draws only from the deck — so **choosing your deck is
+  choosing your risk pool**: bring 6 and each mon carries 1-in-6 ante odds;
+  bring 3 for a focused counter-team and the odds rise to 1-in-3. Bringing
+  your ace means exposing it; leaving it home means fighting without it.
+  "Strength requires exposure" becomes a per-match decision. (Bring-1 is
+  the all-in duel — guaranteed ante, sole fighter, fighting for its own
+  freedom. Whether that's open everywhere or Broker-gated is an open
+  question.)
+- **Binder Pokémon are safe but can't fight.** This is the *only* ante
+  protection in the game. No ante-proof slots, no protected starter. The
+  bounty loop is the humane version of protection.
+- **The floor, restated:** you may never stake your last Pokémon — ante
+  battles require owning at least 2 (deck + binder combined). Below that,
+  it's the Professor's Fund and the pack shop.
 - **The binder has a cap.** Registry-certified storage is measured in
   **binder pages** (a few slots each). You start with one page and buy more
   from the Registry — an escalating money sink competing with packs for the
@@ -92,6 +103,34 @@ soft-reset before a loss saves. Countermeasures:
   nickname — your binder becomes a trophy wall of defeated trainers' aces,
   and the traded-Pokémon XP boost applies naturally. Winning back your own
   Pokémon restores it fully.
+
+### Scouting: binders are partially discoverable
+
+Binders are Registry-certified, and the Registry is a *public ledger* — so
+opposing binders are discoverable, but never with perfect information.
+Information is a resource with tiers, and both sides use it:
+
+- **Free (Registry lookup):** an opponent's binder size and type
+  distribution. Levels are effectively public anyway (badge scaling).
+- **Paid (Broker intel):** likely deck picks, exact species, held items.
+  Scouting reports are another money sink, and the Broker sells the table
+  both ways.
+- **NPCs scout you back.** Trainers shape their decks to counter what your
+  binder shows. Counter-pick intensity is the difficulty knob: route
+  trainers barely scout, gym leaders study you, the rival *always* knows
+  your book.
+- **Information honesty is factional.** Sanctioned gym exhibitions play
+  open teamsheets — full transparency, the VGC mirror. **Rocket falsifies
+  its Registry entries**: scouting a Rocket table returns lies (the rig
+  extends to information). **The Unbound are off the ledger entirely** — no
+  scouting data exists; you fight them blind, which is part of their
+  menace.
+- **Scouting serves the bounty chase:** looking up a bounty holder shows
+  whether your Pokémon has been running in their deck lately.
+- **UX guard:** your deck persists between battles — deck-building is never
+  forced. Route-trainer spam uses your current deck with zero friction;
+  the full preview-and-reselect ceremony is reserved for marquee fights
+  (gyms, rival, Broker matches) and on-demand scouting.
 
 ## Story & world: the region that plays for keeps
 
@@ -243,9 +282,14 @@ Pokémon with love — now plays as a man watching his own history repeat.
 - Bounty migration (moderate — see Nuzlocke section).
 - NPC binder/deck model (cheap — deck draw stays seed-generated; only the
   binder's bounty entries need real storage, which the bounty list already
-  provides; trophy bias is a weighting on the seeded draw).
+  provides; trophy bias and counter-picking are weightings on the seeded
+  draw).
 - Broker called shots (small — a forced-ante battle flag plus a fee).
 - Binder page cap + full-binder overflow flow (moderate — PC UI rework).
+- Deck selection from binder + bring-X ante odds (moderate — party menu
+  rework; ante draw generalizes from 1-in-6 to 1-in-X).
+- Scouting reports UI + info tiers (moderate; Rocket falsification and
+  Unbound blanks are content flags on top of it).
 
 ## Nuzlocke-style rules
 
@@ -345,6 +389,13 @@ fully replace wild encounters as the source of both species and progress.
 - Trophy-bias strength: how often should a held bounty actually appear in
   the holder's deck? (Sets the expected rematch count to reclaim by luck.)
 - Called-shot pricing: flat fee, or scaled to the bounty's value tier?
+- Bring-1 all-in duels: open everywhere, or Broker-gated set pieces?
+- Scouting-report pricing and exact info tiers (what's free vs. paid).
+- Counter-pick intensity curve by trainer class (route trainer → gym
+  leader → rival).
+- Does the mule problem survive deck-building? Dead slots now cost more
+  against counter-picked teams, which may retire the value-matched-stakes
+  fix on its own.
 - Final name and tone for the Unbound (how dark is the card-rip scene?).
 - Is Sabrina's "she names your ante" twist too punishing for gym 6, or
   exactly punishing enough?
@@ -399,4 +450,19 @@ fully replace wild encounters as the source of both species and progress.
   collection dissolves all stakes. The cap turns collecting into curation,
   page purchases give money a second sink competing with packs, and capped
   NPC binders are what make bounty migration coherent rather than
-  arbitrary.
+  arbitrary. The cap also doubles as the "bring" pool for deck-building —
+  bring 30, choose X ≤ 6.
+- **Deck choice = risk choice.** Letting the player build a deck of X ≤ 6
+  from the binder turns the ante draw into a dial: fewer brought means
+  better counter-teams but 1-in-X ante odds. This converts "strength
+  requires exposure" from a fixed rule into a per-match decision, which is
+  the poker layer the concept always wanted.
+- **Information is deliberately imperfect and factionally themed.** Perfect
+  scouting would make battles chess (solved counter-picking); zero
+  scouting wastes the deck-building layer. Partial info keeps it poker —
+  and mapping information honesty to the factions (League = open
+  teamsheets, Rocket = falsified entries, Unbound = off the ledger) makes
+  the info system carry theme, not just mechanics.
+- **Deck persistence is the UX firewall.** Deck-building before every
+  route-trainer fight would be misery; the current deck rides along by
+  default and full ceremony is reserved for fights that deserve it.
