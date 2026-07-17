@@ -1,114 +1,184 @@
 # Pokémon Ante — Design Document
 
-A Fire Red ROM hack built on the old Magic: The Gathering ante rule. Every
-trainer battle is played for keeps: each side stakes one Pokémon, and the
-winner takes the loser's stake.
+A Fire Red ROM hack built around Magic: The Gathering's original **ante** rule:
+before a match, each player sets aside a random card from their deck; the winner
+takes the opponent's ante.
 
-## Core premise (from README)
+## Premise
 
-- No catching wild Pokémon (possibly no wild encounters at all)
-- Before a trainer battle, 1 of your party of 6 is randomly drawn as your ante
-- Winner of the battle gets the loser's ante
-- Trainers you defeat refill their teams from the local wild encounter table
-- Trainers who beat you keep your Pokémon and may use it against you later
-- A store sells "packs" of Pokémon
+- **No wild catching.** Wild encounters are removed (or replaced — see Packs).
+- **Every trainer battle is an ante battle.** Each side randomly stakes one
+  Pokémon from their party; winner keeps their own ante and takes the loser's.
+- **Trainers keep what they win.** Lose your Charizard and that Bug Catcher owns
+  it now — and may field it against you next time.
+- **Beaten trainers restock.** Rematch a trainer enough times and their roster
+  refills with random pulls from the local wild encounter tables.
+- **Packs.** A shop sells booster packs of Pokémon, pulled from encounter
+  tables of routes you've reached.
 
-## The core insight
+## The central design problem: the death spiral
 
-"Beaten trainers refill from the wild encounter table" + Fire Red's Vs Seeker
-means wild encounter tables don't disappear — they move *inside trainer
-parties*. Route trainers become a renewable source of local species, gated
-behind winning battles instead of throwing balls. This is the regeneration
-engine, grinding loop, and catch-up mechanic all in one.
+Ante is inherently rich-get-richer: losing makes you weaker, which makes you
+likelier to lose again. In single-player this can soft-lock a save. Every rule
+below is tuned to make losses sting without spiraling.
 
-## Three make-or-break problems
+### Anti-spiral kit
 
-### 1. The reset problem
-Players will soft-reset to dodge losses. Mitigations (use both):
-- Autosave the instant antes are committed at battle start — the potential
-  loss is saved before the fight resolves (roguelike-style).
-- Make losses recoverable (revenge rematches, below) so resetting feels
-  less necessary.
+1. **Losses are bounties, not deletions.** A trainer who takes your Pokémon
+   keeps it and can use it. But the rematch always stays open, and when you
+   beat a trainer who holds one of your former Pokémon, *that* Pokémon is
+   their ante. A **Bounty Board** (Pokédex-style menu) tracks who holds what
+   and where they are.
+2. **Party floor.** You cannot enter an ante battle with fewer than 2 party
+   Pokémon. At 1, you're directed to the pack shop; a pity-priced **Starter
+   Pack** is always affordable.
+3. **Badge-scaled levels.** All Pokémon — yours and won antes — are capped or
+   scaled to a level determined by badge count. Critical rule: it makes every
+   won Pokémon immediately viable (churn is fun, not punishing) and replaces
+   grinding entirely, which no-wild-encounters would otherwise break.
 
-### 2. The softlock problem
-With no catching, the player can hit zero Pokémon. Fixes:
-- MTG-style floor: trainers only accept ante battles if the player has 2+
-  Pokémon total (party + PC). At 1, all battles are friendly (no ante,
-  reduced prize money).
-- Charity floor: Oak provides a free basic pack if the player is broke and
-  down to one mon.
+### The reset problem (the spiral's mirror image)
 
-### 3. The ante-fodder ("mule") problem
-Uniform random draw from 6 invites carrying junk mons as sacrificial padding.
-Fix: **value-matched stakes** — after the player's ante is drawn, the
-trainer's ante is drawn from their team at a comparable value tier
-(level × base stat total). Stake a Rattata, play for their Rattata.
-A junk deck antes junk. Self-balancing, no hard rules needed.
+The anti-spiral kit only matters if losses actually stick: players will
+soft-reset before a loss saves. Countermeasures:
 
-## Core ruleset
+- **Autosave when antes are committed** at battle start, before the fight
+  resolves (roguelike-style) — the potential loss is already on disk.
+- The bounty loop is also anti-reset by design: a loss that stays winnable
+  is a loss players are more willing to keep.
+- Enforcement level (hard autosave vs. player honor) is an open question —
+  it decides whether this is a hardcore hack or a casual one.
 
-- **Symmetric ante, revealed at battle start.** Both sides draw one; both are
-  shown before turn one. Winner takes the loser's ante.
-- **The anted mon fights.** (Deliberate break from MTG, where the ante card
-  left the deck.) Your staked mon can end up fighting for its own freedom,
-  and padding your team with junk actively weakens you.
-- **Losing costs exactly the ante, never more.** The ante transfer replaces
-  the whiteout money penalty. Fleeing/conceding forfeits the ante but
-  protects the rest of the team (= scooping in MTG).
-- **Revenge weighting.** A trainer holding a mon won from you has their ante
-  draw forced (or heavily weighted) toward that mon on rematch. It appears
-  in their team slightly leveled — they've been training it.
-- **OT and nicknames persist.** Won mons keep their original trainer; the
-  traded-mon XP boost applies naturally. Winning back your own mon restores
-  it fully.
-- **HMs become key items.** Progression must never depend on a specific mon
-  the player might lose. Badge + HM item = field move usable.
+## Ante mechanics
 
-## Structure and story
+- **Symmetric ante, MTG-style.** At battle start, both sides randomly reveal
+  one party Pokémon as their ante. Winner takes the opponent's ante and keeps
+  their own.
+- **The ante still fights.** Unlike MTG (where the anted card leaves the deck),
+  the staked Pokémon participates — it's fighting for its freedom. Keeps
+  battles 6v6 and maximizes drama when your ace is drawn.
+- **Reveal before turn 1.** Both antes are shown at battle start, before the
+  first move. The tension of "my starter is on the line" is the whole game.
+- **Party = deck, PC = binder.** Ante draws only from the party of 6. The PC
+  box is your collection — perfectly safe, but boxed Pokémon can't fight.
+  This is the *only* ante protection in the game. No ante-proof slots, no
+  protected starter: strength requires exposure. The bounty loop is the
+  humane version of protection.
+- **OT and nicknames persist.** Won Pokémon keep their original trainer and
+  nickname — your binder becomes a trophy wall of defeated trainers' aces,
+  and the traded-Pokémon XP boost applies naturally. Winning back your own
+  Pokémon restores it fully.
 
-- **Rival as emotional spine:** mons he wins off you reappear in later
-  scripted fights, trained and evolved.
-- **Gym leaders ante their signature mon** (replaces gift Pokémon as marquee
-  rewards). Each badge also unlocks that gym's themed pack in stores.
-- **Endgame — Redemption:** the League holds "the pot": every mon the player
-  lost and never reclaimed. Beating the Champion returns all of them.
-- **Level caps per badge** (candidate) to prevent Vs Seeker snowballing.
+## Lore: the League banned ante (like Wizards did)
 
-## Pack store economy
+Historically, WotC banned ante from sanctioned play. Mirror it:
 
-- Tiered like TCG sets: cheap Base packs early; area-themed packs
-  (Mt. Moon pack: Geodude/Zubat/Paras/fossils); gym packs behind badges.
-- Rarity slots: 3 commons / 1 uncommon / 1 rare, small legendary-adjacent
-  odds late game.
-- **Singles market** late game: pay a premium for an exact species.
-- Prize money roughly doubled — battles are the only income, packs the only
-  sink.
+- The **Pokémon League has banned ante battles**. Gym and League matches are
+  "sanctioned." Route trainers play by the old rules — ante is simply how the
+  region battles.
+- **Gyms opt back in as prestige exhibitions:** each leader stakes a
+  guaranteed rare, gym-themed Pokémon. Gyms are jackpot fights, not the one
+  place the mechanic disappears. (Sanctioned/no-ante status is reserved as a
+  safety valve for battles that could soft-lock the story: first rival fight,
+  forced tutorial battles.)
+- **Team Rocket are ante sharks** — rigged high-stakes games, "repossession"
+  of Pokémon. Villain reframe with minimal map changes.
+- **The rival is the bounty system's showcase.** Pokémon the rival wins from
+  you reappear in later scripted fights, trained and evolved — "your
+  Charmander, now their Charizard" is the emotional spine of the story.
+  Whether the rival can hold a bounty for a whole act is an open question.
 
-## MTG flavor ports
+## Economy
 
-- **High rollers** ante 2 (Contract from Below); some trainers stake
-  TMs/items instead of mons (Timmerian Fiends).
-- **Darkpact** (consumable, rare): after the reveal, swap your drawn ante
-  for another party member.
-- **Amulet of Quoz** NPC gimmick: skip the fight, coin-flip for the antes.
-- **Bound Ribbon:** excludes holder from the ante draw — unique or
-  single-use only, or stakes die.
-- Key items named after the nine ante cards (Bronze Tablet, Jeweled Bird,
-  Tempest Efreet, ...).
+- **Packs** pull from wild encounter tables of routes reached so far,
+  preserving Kanto's route-progression species curve. TCG rarity tiers
+  (common/uncommon/rare/holo) mapped to base-stat total and evolution stage.
+  Badge-gated themed packs.
+- **Collector NPC buys Pokémon.** Converts duplicate ante winnings into money
+  into packs. Without sell-back, the PC is a landfill and winning feels
+  worthless.
+- **Ante-manipulation items** (homage to MTG's ante cards), sold at the shop:
+  - *Jeweled Charm* (Jeweled Bird): held item; if the holder is drawn as ante
+    and the battle is lost, the stake converts to money paid to the winner.
+    Consumed on trigger, priced against the holder's value — a costly
+    one-shot escape valve, not standing protection (see rationale: the PC
+    remains the only *free* protection).
+  - *Broker* NPC (Demonic Attorney): offers double-ante, double-stakes
+    rematches.
+  - *Redraw Contract* (Contract from Below): consumable; re-draw your ante
+    once, at a price.
 
-## Technical direction
+## Core loop
 
-Build on the **pret/pokefirered decompilation**, not binary patching.
-Battle-end hooks, persistent per-trainer state, dynamic trainer parties, and
-custom shops are ordinary C in the decomp. Hardest piece: trainer
-persistence (~10–16 bytes of save data per remembered mon). Fire Red's save
-block has slack for full persistence on notable trainers + beat-counts for
-generic trainers; the decomp allows reshaping the save layout.
+Vs Seeker is the engine. Rematch → trainer restocks from wild tables → farm
+antes → sell duplicates → buy packs → build the binder. Trainer rematches
+fully replace wild encounters as the source of both species and progress.
 
-## Open decisions
+## Rulings on edge cases
 
-1. Does the anted mon fight (recommended) or sit out (MTG-pure)?
-2. Can the starter be anted? (Lean yes, with the 2-mon floor as safety net.)
-3. Enforce autosave-on-ante, or leave save-scumming to player honor?
-4. Persistence scope: all trainers, or full memory only for rival / gym
-   leaders / recurring NPCs?
+- **Whiteout:** losing does NOT mark a trainer beaten — rematches must stay
+  open or lost Pokémon become unrecoverable. Ante loss replaces the vanilla
+  half-money penalty.
+- **HMs:** no catching means no HM mules. Remove field-HM gates or convert
+  HMs to key-item abilities.
+- **Eggs / in-game trades / event Pokémon:** cut. Packs cover acquisition.
+- **Link battles:** out of scope.
+
+## Technical notes (Fire Red)
+
+- Build on the **pret/pokefirered decomp**, not binary hacking — dynamic
+  trainer parties, ante logic, and the pack shop are all C-level features.
+- **Save RAM is the scarce resource.** Do not store restocked trainer parties:
+  generate them **deterministically from trainer ID + times-beaten counter**
+  (seed-based), so they cost zero save space and are stable across reloads.
+  Real storage is only needed for the (small, capped) list of trainers
+  currently holding a former player Pokémon — full BoxPokemon structs, ring
+  buffer if necessary.
+- Vs Seeker already provides the rematch scaffolding; extend rather than
+  replace.
+
+## Open questions
+
+- Exact badge → level-cap curve.
+- Pack pricing / money faucets and sinks balance.
+- Should the Broker's double-ante rematches be gated behind story progress?
+- Does the rival participate in the bounty system (can they permanently hold
+  your starter for an act)?
+- Autosave enforcement: hard autosave-on-ante (hardcore) or player honor
+  (casual)? Possibly a New Game mode toggle.
+- **The mule problem:** with a purely random symmetric draw, padding the
+  party with low-value Pokémon dilutes ante risk. Badge scaling mitigates
+  (levels equalize; a mule still costs a real fighting slot) but base-stat
+  gaps remain. Candidate fix if it proves degenerate in playtesting:
+  **value-matched stakes** — the trainer's ante is drawn at a value tier
+  comparable to the player's drawn ante (level × BST), so staking a Rattata
+  means playing for their Rattata.
+- Are Elite Four / Champion matches sanctioned (no ante) per the ban lore,
+  or the ultimate exhibition? A candidate finale: the Champion stakes the
+  pot — any bounties never reclaimed — so beating the League closes every
+  open loss at once.
+
+## Design rationale (preserved from discussion)
+
+- The **death spiral** is the single make-or-break issue; the bounty loop +
+  party floor + badge scaling exist specifically to counter it. If any of
+  the three is cut, revisit the other two.
+- **Badge-scaled levels double as the grinding replacement** — removing wild
+  encounters otherwise breaks EXP progression entirely.
+- The **"League banned ante" lore mirrors real MTG history** (WotC banned
+  ante from sanctioned play), which is why gyms are framed as sanctioned
+  matches that opt back in as exhibitions.
+- **Deliberately rejected ideas:**
+  - An ante-proof starter slot or protective held item that excludes a
+    Pokémon from the draw (deflates the premise — the bounty loop is the
+    humane protection instead; Jeweled Charm skirts this only because it
+    still costs the winner's payout and is consumed on use).
+  - Winner-take-loser's-ante-only (asymmetric, doesn't match MTG).
+  - Removing the anted Pokémon from the battle MTG-style (hides the drama
+    and makes battles 5v6).
+- **Seed-based trainer restocking** (trainer ID + times-beaten as RNG seed)
+  is the key technical trick — it makes "trainers refill from wild tables"
+  cost zero save RAM, which is the binding constraint in a Fire Red hack.
+- The **reset problem is the spiral's mirror image**: the spiral punishes
+  losses too hard, resetting erases them entirely; the design needs both
+  edges handled or the ante mechanic collapses into vanilla.
