@@ -125,6 +125,26 @@ Information is a resource with tiers, and both sides use it:
   extends to information). **The Unbound are off the ledger entirely** — no
   scouting data exists; you fight them blind, which is part of their
   menace.
+- **The Book: exhibition history is public record.** Sanctioned exhibition
+  matches (gyms, League) are played on open teamsheets *and recorded* — the
+  Registry keeps every deck you've ever brought to one. That history is the
+  region's free scouting data on you: NPCs counter-pick from "what you
+  typically bring," not just your binder's contents. Consequences:
+  - **Fame is a difficulty ramp.** With no history, nobody has a read on
+    you — early-game anonymity is a real advantage. Every badge adds pages
+    to the book, and the region adapts. Champions are known quantities.
+  - **The jackpot is priced in information.** Gym exhibitions stake rare
+    Pokémon *because* you pay in revealed strategy. Underground ante games
+    are off the record — one more honest reason trainers keep playing
+    them.
+  - **You can play the book.** Bring an off-meta deck to an exhibition and
+    you've poisoned the data; show your ace rarely and it stays a
+    surprise. Bluffing is possible because you can read your own file —
+    the Trainer Card gains a "what the region knows about you" page.
+  - **Rocket has your full file** — stolen Registry data, not the public
+    book — so their tables counter-pick unnervingly well. The rig, again.
+  - **The Unbound refuse to read it.** They consult no ledger on
+    principle: blind both ways.
 - **Scouting serves the bounty chase:** looking up a bounty holder shows
   whether your Pokémon has been running in their deck lately.
 - **UX guard:** your deck persists between battles — deck-building is never
@@ -290,6 +310,9 @@ Pokémon with love — now plays as a man watching his own history repeat.
   rework; ante draw generalizes from 1-in-6 to 1-in-X).
 - Scouting reports UI + info tiers (moderate; Rocket falsification and
   Unbound blanks are content flags on top of it).
+- The Book (cheap on save RAM — a compact per-species usage histogram or a
+  small ring buffer of the last N exhibition decks, not full match logs;
+  counter-pick weighting reads it; Trainer Card page renders it).
 
 ## Nuzlocke-style rules
 
@@ -393,6 +416,13 @@ fully replace wild encounters as the source of both species and progress.
 - Scouting-report pricing and exact info tiers (what's free vs. paid).
 - Counter-pick intensity curve by trainer class (route trainer → gym
   leader → rival).
+- The Book's memory: how many exhibitions back does it reach, and does old
+  data decay?
+- Can the book be laundered — pay the Registry (or the Broker) to seal or
+  falsify your own records? (Delicious, but it hands the player Rocket's
+  tool; decide whether that's a moral-choice hook or off the table.)
+- Are Broker matches on or off the record? (Off keeps the underground's
+  information appeal consistent.)
 - Does the mule problem survive deck-building? Dead slots now cost more
   against counter-picked teams, which may retire the value-matched-stakes
   fix on its own.
@@ -466,3 +496,8 @@ fully replace wild encounters as the source of both species and progress.
 - **Deck persistence is the UX firewall.** Deck-building before every
   route-trainer fight would be misery; the current deck rides along by
   default and full ceremony is reserved for fights that deserve it.
+- **The Book makes fame the difficulty curve.** Recording only sanctioned
+  exhibition decks means NPC reads on the player grow with public play:
+  anonymity early, adaptation late — organic difficulty scaling with zero
+  level math. It also gives gyms an information *price* for their jackpot
+  stakes and gives the underground a reason to exist beyond the ban.
