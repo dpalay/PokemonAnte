@@ -9,9 +9,9 @@ something playable, ordered so the riskiest systems get proven first.
   Fire Red decompilation). Every system in the design — battle hooks,
   save-layout changes, dynamic parties, custom shops and UIs — is ordinary
   C there and impractical as binary patching.
-- **Repo layout:** import pokefirered as the base commit on a `rom`
-  lineage (or vendor it as a subtree); hack code lives in-tree the way
-  pret-based hacks normally do. `docs/` keeps DESIGN.md and this file.
+- **Repo layout:** the decomp is vendored at `game/` (snapshot of
+  pret/pokefirered; pinned commit recorded in `game/UPSTREAM.txt`), so
+  hack code is edited in-tree while design docs stay at the repo root.
 - **Toolchain:** agbcc + devkitARM per pokefirered's INSTALL.md; verify a
   byte-matching vanilla build first, then diverge.
 - **CI:** GitHub Action that builds the ROM from source on every push.
