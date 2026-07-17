@@ -24,11 +24,20 @@ below is tuned to make losses sting without spiraling.
 
 ### Anti-spiral kit
 
-1. **Losses are bounties, not deletions.** A trainer who takes your Pokémon
-   keeps it and can use it. But the rematch always stays open, and when you
-   beat a trainer who holds one of your former Pokémon, *that* Pokémon is
-   their ante. A **Bounty Board** (Pokédex-style menu) tracks who holds what
-   and where they are.
+1. **Losses are bounties, not deletions — but reclaiming is a chase.**
+   A trainer who takes your Pokémon adds it to their **binder** (trainers
+   are players too — see Ante mechanics). It is *not* guaranteed to appear:
+   their deck of 6 draws from their binder for each match, and their ante is
+   still random from that deck. Two things keep the chase fair rather than
+   hopeless:
+   - **Trophy bias:** deck draws are weighted toward recently won Pokémon —
+     trainers like showing off their prizes — so your lost mon shows up in
+     their deck often, and has the normal 1-in-6 ante odds from there.
+   - **Called shots:** the Broker can arrange a match where a specific
+     bounty is forced into the opponent's stake — at double-ante rules and
+     a steep fee. The RNG chase is free; certainty costs money.
+   A **Bounty Board** (Registry feature) tracks which binder holds what and
+   where that trainer is.
 2. **Party floor.** You cannot enter an ante battle with fewer than 2 party
    Pokémon. At 1, you're directed to the pack shop; a pity-priced **Starter
    Pack** is always affordable.
@@ -64,6 +73,21 @@ soft-reset before a loss saves. Countermeasures:
   This is the *only* ante protection in the game. No ante-proof slots, no
   protected starter: strength requires exposure. The bounty loop is the
   humane version of protection.
+- **The binder has a cap.** Registry-certified storage is measured in
+  **binder pages** (a few slots each). You start with one page and buy more
+  from the Registry — an escalating money sink competing with packs for the
+  same wallet — up to a hard maximum well below "one of everything."
+  Without a cap, a deep binder is infinite lives (badge scaling makes every
+  stored mon instantly viable) and losses stop mattering; with one,
+  collection becomes **curation**, and every slot is a decision. Winning an
+  ante with a full party and full binder forces an immediate choice: sell
+  the winnings on the spot, or release/sell something to make room.
+- **Trainers are players too.** Every NPC trainer has a binder and draws a
+  deck of 6 from it per match; their ante is random from that deck. Won
+  player Pokémon go into the binder like anything else. Restocking from
+  wild tables is the visible face of NPCs playing the same economy — and
+  their binders are capped too, which is *why* they sell Pokémon on
+  (see bounty migration).
 - **OT and nicknames persist.** Won Pokémon keep their original trainer and
   nickname — your binder becomes a trophy wall of defeated trainers' aces,
   and the traded-Pokémon XP boost applies naturally. Winning back your own
@@ -197,7 +221,10 @@ ante rule* is their gym gimmick (format variants, in TCG terms):
 **The Champion is the rival — and the finale stakes the pot.** Oak's
 grandson embraced everything his grandfather abandoned: he played ante all
 game, held your bounties across whole acts, and climbed to the top on won
-Pokémon. At the Hall of Fame he defies the ban on the biggest stage:
+Pokémon. As bounties migrate between binders, **he has been buying yours** —
+the Bounty Board shows your losses drifting, one by one, into his
+collection. He isn't collecting Pokémon; he's collecting *you*. At the Hall
+of Fame he defies the ban on the biggest stage:
 **he stakes every unreclaimed bounty in the region against your party**.
 Beat him and every open loss in the game closes at once. Oak's canon
 post-champion scene — arriving to dress down his grandson about treating
@@ -214,6 +241,11 @@ Pokémon with love — now plays as a man watching his own history repeat.
 - Unbound trainers: permadeath on ante loss, item/cash stakes (small —
   a battle flag plus skipping bounty creation).
 - Bounty migration (moderate — see Nuzlocke section).
+- NPC binder/deck model (cheap — deck draw stays seed-generated; only the
+  binder's bounty entries need real storage, which the bounty list already
+  provides; trophy bias is a weighting on the seeded draw).
+- Broker called shots (small — a forced-ante battle flag plus a fee).
+- Binder page cap + full-binder overflow flow (moderate — PC UI rework).
 
 ## Nuzlocke-style rules
 
@@ -233,12 +265,13 @@ by the bounty loop. That framing decides what to borrow:
   persist across owners — named stakes hurt more, and that's the game.
 - **First-encounter-per-route: skip.** Its function (scarcity + forced
   roster variety) is already served by pack RNG and random ante draws.
-- **Bounty migration (urgency without permadeath).** Bounties held by
-  generic trainers don't sit still forever: unclaimed too long (badge-count
-  based), the holder sells the Pokémon on — to another trainer, or to the
-  Broker's high-stakes table where reclaiming costs a double-ante match.
-  Rocket repossession pulls migrating bounties toward Rocket hands. Still
-  recoverable, but losses now have a clock and a story.
+- **Bounty migration (urgency without permadeath).** NPC binders are capped
+  too, so bounties don't sit still: unclaimed too long (badge-count based),
+  the holder sells the Pokémon on to make room — to another trainer, to the
+  Broker's high-stakes table, or (via repossession) into Rocket hands. The
+  Bounty Board tracks the moves. Still recoverable, but losses have a clock
+  and a story — and the rival is quietly buying your bounties up (see the
+  finale).
 - **Hardcore toggle at new game** bundling the classic nuzlocke austerity
   for players who want it: enforced autosave-on-ante, set battle mode, no
   bag items in battle, mandatory nicknames, and a tight bounty-migration
@@ -260,7 +293,9 @@ by the bounty loop. That framing decides what to borrow:
     one-shot escape valve, not standing protection (see rationale: the PC
     remains the only *free* protection).
   - *Broker* NPC (Demonic Attorney): offers double-ante, double-stakes
-    rematches.
+    rematches — and **called shots**: for a steep fee, arranges a match
+    where a specific bounty from the opponent's binder is forced into
+    their stake. The paid, deterministic path to reclaiming a lost Pokémon.
   - *Redraw Contract* (Contract from Below): consumable; re-draw your ante
     once, at a price.
 
@@ -305,6 +340,11 @@ fully replace wild encounters as the source of both species and progress.
   **value-matched stakes** — the trainer's ante is drawn at a value tier
   comparable to the player's drawn ante (level × BST), so staking a Rattata
   means playing for their Rattata.
+- Binder tuning: starting page count, slots per page, page price curve, and
+  the hard maximum (needs to stay well below "one of everything").
+- Trophy-bias strength: how often should a held bounty actually appear in
+  the holder's deck? (Sets the expected rematch count to reclaim by luck.)
+- Called-shot pricing: flat fee, or scaled to the bounty's value tier?
 - Final name and tone for the Unbound (how dark is the card-rip scene?).
 - Is Sabrina's "she names your ante" twist too punishing for gym 6, or
   exactly punishing enough?
@@ -347,3 +387,16 @@ fully replace wild encounters as the source of both species and progress.
 - **Three-faction triangle:** the League (reform), Rocket (underground
   profit), the Unbound (abolitionist extremism) — all three are downstream
   of Oak's ban, which is why Oak's guilt can carry the whole story.
+- **Forced bounty-ante was replaced by the bounty chase.** Guaranteeing
+  your lost Pokémon as the holder's ante made losses too cheap — one
+  rematch win was a full refund. NPC binders + random deck/ante draws make
+  reclaiming a chase; trophy bias keeps the chase fair, and the Broker's
+  called shots keep recoverability deterministic *at a price*. Net effect:
+  the anti-spiral pillar survives, but slower and costlier — watch it in
+  playtesting.
+- **The binder cap exists because a deep binder is infinite lives.** Badge
+  scaling makes every stored Pokémon instantly viable, so an uncapped
+  collection dissolves all stakes. The cap turns collecting into curation,
+  page purchases give money a second sink competing with packs, and capped
+  NPC binders are what make bounty migration coherent rather than
+  arbitrary.
