@@ -141,6 +141,9 @@ Information is a resource with tiers, and both sides use it:
     you've poisoned the data; show your ace rarely and it stays a
     surprise. Bluffing is possible because you can read your own file —
     the Trainer Card gains a "what the region knows about you" page.
+  - **The book decays.** Reads are recency-weighted: old exhibitions fade,
+    so a style switch eventually re-anonymizes you — and a poisoned book
+    doesn't stay poisoned. Bluffs are an investment with a shelf life.
   - **Rocket has your full file** — stolen Registry data, not the public
     book — so their tables counter-pick unnervingly well. The rig, again.
   - **The Unbound refuse to read it.** They consult no ledger on
@@ -221,6 +224,26 @@ Rocket doesn't steal Pokémon in a world where you can win them legally — it
   containment tech that packs are built on. Rocket seizing Silph means
   controlling the entire region's Pokémon supply — in a no-catching world,
   that's everything.
+- **Going off-ledger (the laundering beat).** You cannot launder your own
+  book — the Registry doesn't take requests. But the infiltration of
+  Rocket's high tables *requires* it: a forger seals your record, and for
+  that story stretch you live the way Rocket and the Unbound live.
+  **The ledger is truth in this world**, so the forgery is binding:
+  - Sealed Pokémon are **ghosts** — unscoutable, invisible to the Book,
+    and unrecognized in sanctioned play (a gym cannot legally accept a
+    stake you don't own).
+  - Lose a ghost at an underground table and **no bounty is created** —
+    the Bounty Board can't track what you never owned. Off-ledger losses
+    are permadeath-adjacent, exactly like an Unbound rip.
+  - **Audits.** Registry inspectors exist, and your fixed book backs the
+    lie: field a ghost in the wrong place and it reads as stolen goods —
+    impounded pending re-registration (fees, or a quest).
+  - Afterward you're **offered the choice**: restore your record — which
+    requires Oak's personal countersignature, and that scene — or keep the
+    ghost identity: unscoutable forever, untraceable forever, and one
+    audit away from losing everything. The player gets to feel, once, why
+    the ledger is what makes losses recoverable — the Registry justifies
+    itself by its absence.
 - **Mewtwo is counterfeiting rarity itself.** If you can't win it and can't
   pull it, print it. Postgame, Mewtwo is the misprint with no provenance —
   it antes *itself*, and names your whole party as the stake.
@@ -310,9 +333,12 @@ Pokémon with love — now plays as a man watching his own history repeat.
   rework; ante draw generalizes from 1-in-6 to 1-in-X).
 - Scouting reports UI + info tiers (moderate; Rocket falsification and
   Unbound blanks are content flags on top of it).
-- The Book (cheap on save RAM — a compact per-species usage histogram or a
-  small ring buffer of the last N exhibition decks, not full match logs;
-  counter-pick weighting reads it; Trainer Card page renders it).
+- The Book (cheap on save RAM — a small ring buffer of the last N
+  exhibition decks, which gives recency decay for free; counter-pick
+  weighting reads it; Trainer Card page renders it).
+- Off-ledger state (moderate — a per-Pokémon ghost flag feeding scouting,
+  sanctioned-play eligibility, and bounty creation; audit events; an
+  impound holding list).
 
 ## Nuzlocke-style rules
 
@@ -416,11 +442,11 @@ fully replace wild encounters as the source of both species and progress.
 - Scouting-report pricing and exact info tiers (what's free vs. paid).
 - Counter-pick intensity curve by trainer class (route trainer → gym
   leader → rival).
-- The Book's memory: how many exhibitions back does it reach, and does old
-  data decay?
-- Can the book be laundered — pay the Registry (or the Broker) to seal or
-  falsify your own records? (Delicious, but it hands the player Rocket's
-  tool; decide whether that's a moral-choice hook or off the table.)
+- The Book's decay rate: how many exhibitions until a read goes stale?
+  (Decided: decay exists; tune the half-life.)
+- The off-ledger beat: how long is the forced stretch, how often do audits
+  fire for a player who keeps the ghost identity, and can an impounded
+  Pokémon be permanently lost or only fee-locked?
 - Are Broker matches on or off the record? (Off keeps the underground's
   information appeal consistent.)
 - Does the mule problem survive deck-building? Dead slots now cost more
@@ -501,3 +527,11 @@ fully replace wild encounters as the source of both species and progress.
   anonymity early, adaptation late — organic difficulty scaling with zero
   level math. It also gives gyms an information *price* for their jackpot
   stakes and gives the underground a reason to exist beyond the ban.
+- **The ledger is truth.** Records don't describe ownership; they *are*
+  ownership. This is why self-service laundering was rejected — not
+  because falsifying the book is too strong, but because in this world it
+  isn't stealth, it's identity destruction. The story makes the player do
+  it once (Rocket infiltration) so the consequences teach what the
+  Registry is *for*: the ledger is the thing that makes losses
+  recoverable. Rocket and the Unbound both live outside it; the player
+  gets one supervised taste.
