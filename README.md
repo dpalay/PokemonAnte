@@ -1,4 +1,14 @@
 # PokemonAnte
+
+A Fire Red ROM hack where every trainer battle is played for keeps,
+built on Magic: The Gathering's original ante rule.
+
+- **[DESIGN.md](DESIGN.md)** — the consolidated game design.
+- **[IMPLEMENTATION.md](IMPLEMENTATION.md)** — the phased build plan
+  (pret/pokefirered decomp).
+
+## Original concept
+
 I want to make a pokemon rom hack for Fire Red.  I'd like to base it on the concept of the old Magic The Gathering rule about Antes. My initial thoughts:
 
 major distinctions:
