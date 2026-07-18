@@ -26,3 +26,40 @@ Route1_Text_RouteSign::
     .string "ROUTE 1\n"
     .string "PALLET TOWN - VIRIDIAN CITY$"
 
+
+Route1_Text_AlIntro::
+	.string "Fresh from PALLET, huh?\n"
+	.string "Old rules! Ante up!$"
+
+Route1_Text_AlDefeat::
+	.string "Aww! There goes my RATTATA…$"
+
+Route1_Text_AlPostBattle::
+	.string "Win some, lose some.\n"
+	.string "That's the old rules for you.$"
+
+Route1_Text_BetIntro::
+	.string "Three on my side, so my stake's\n"
+	.string "drawn from three. Yours from one?\p"
+	.string "The draw doesn't care. Ante up!$"
+
+Route1_Text_BetDefeat::
+	.string "The draw giveth, the draw\n"
+	.string "taketh away…$"
+
+Route1_Text_BetPostBattle::
+	.string "Whoever it draws, you learn to\n"
+	.string "love the one it leaves you.$"
+
+Route1_Text_CalIntro::
+	.string "Careful, kid. My MANKEY's put a\n"
+	.string "lot of starters in my binder.\p"
+	.string "Still want to play? Ante up!$"
+
+Route1_Text_CalDefeat::
+	.string "Huh. House doesn't always win\n"
+	.string "after all.$"
+
+Route1_Text_CalPostBattle::
+	.string "Come back with the VS SEEKER\n"
+	.string "someday. I always restock.$"

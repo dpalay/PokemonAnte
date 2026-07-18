@@ -751,7 +751,12 @@
 //       only space for 25 additional trainers before trainer flag space overflows.
 //       MAX_TRAINERS_COUNT can be increased but will take up additional saveblock space
 
-#define NUM_TRAINERS                             743
+// Pokémon Ante: test trainers on Route 1 for exercising the core ante loop.
+#define TRAINER_ANTE_TESTER_AL                   743
+#define TRAINER_ANTE_TESTER_BET                  744
+#define TRAINER_ANTE_TESTER_CAL                  745
+
+#define NUM_TRAINERS                             746
 #define MAX_TRAINERS_COUNT                       768
 
 #endif  // GUARD_CONSTANTS_OPPONENTS_H

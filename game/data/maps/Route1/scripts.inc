@@ -33,3 +33,18 @@ Route1_EventScript_Boy::
 Route1_EventScript_RouteSign::
 	msgbox Route1_Text_RouteSign, MSGBOX_SIGN
 	end
+
+Route1_EventScript_AnteTesterAl::
+	trainerbattle_single TRAINER_ANTE_TESTER_AL, Route1_Text_AlIntro, Route1_Text_AlDefeat
+	msgbox Route1_Text_AlPostBattle, MSGBOX_AUTOCLOSE
+	end
+
+Route1_EventScript_AnteTesterBet::
+	trainerbattle_single TRAINER_ANTE_TESTER_BET, Route1_Text_BetIntro, Route1_Text_BetDefeat
+	msgbox Route1_Text_BetPostBattle, MSGBOX_AUTOCLOSE
+	end
+
+Route1_EventScript_AnteTesterCal::
+	trainerbattle_single TRAINER_ANTE_TESTER_CAL, Route1_Text_CalIntro, Route1_Text_CalDefeat
+	msgbox Route1_Text_CalPostBattle, MSGBOX_AUTOCLOSE
+	end
