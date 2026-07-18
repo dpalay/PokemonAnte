@@ -259,13 +259,10 @@ static void DoWhiteOut(void)
 
 u32 ComputeWhiteOutMoneyLoss(void)
 {
-    u8 nbadges = CountBadgesForOverworldWhiteOutLossCalculation();
-    u8 toplevel = GetPlayerPartyHighestLevel();
-    u32 losings = toplevel * 4 * sWhiteOutMoneyLossMultipliers[nbadges];
-    u32 money = GetMoney(&gSaveBlock1Ptr->money);
-    if (losings > money)
-        losings = money;
-    return losings;
+    // Pokémon Ante: losing costs exactly the ante, never more. The staked
+    // Pokémon has already been transferred by the time a whiteout runs, so
+    // the vanilla money penalty would double-charge the loss.
+    return 0;
 }
 
 void OverworldWhiteOutGetMoneyLoss(void)
