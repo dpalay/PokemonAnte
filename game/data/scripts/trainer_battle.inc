@@ -111,16 +111,29 @@ Movement_RevealTrainer::
 
 @ Pokémon Ante: draw both stakes and reveal them before the fight starts.
 @ AnteCommit returns FALSE when the battle must be played friendly (no ante).
+@ The reveal ceremony shows each staked Pokémon's picture (with its cry)
+@ while its side of the ante is announced. Species are buffered by
+@ AnteCommit into VAR_0x8004 (player) and VAR_0x8005 (opponent).
 EventScript_AnteCommitAndReveal::
 	specialvar VAR_RESULT, AnteCommit
 	goto_if_eq VAR_RESULT, FALSE, EventScript_AnteRevealDone
 	msgbox Text_AnteReveal, MSGBOX_DEFAULT
+	showmonpic VAR_0x8004, 10, 3
+	msgbox Text_AnteStakeYours, MSGBOX_DEFAULT
+	hidemonpic
+	showmonpic VAR_0x8005, 10, 3
+	msgbox Text_AnteStakeTheirs, MSGBOX_DEFAULT
+	hidemonpic
 EventScript_AnteRevealDone::
 	return
 
 Text_AnteReveal::
-	.string "Both sides put up an ANTE!\p"
-	.string "You stake {STR_VAR_1}!\n"
+	.string "Both sides put up an ANTE!$"
+
+Text_AnteStakeYours::
+	.string "You stake {STR_VAR_1}!$"
+
+Text_AnteStakeTheirs::
 	.string "Your opponent stakes {STR_VAR_2}!$"
 
 EventScript_DoTrainerBattle::

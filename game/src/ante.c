@@ -96,6 +96,10 @@ u16 AnteCommit(void)
     GetMonNickname(&gPlayerParty[playerSlot], gStringVar1);
     StringCopy(gStringVar2, gSpeciesNames[GetTrainerMonSpecies(trainerId, ante->enemySlot)]);
 
+    // Species for the reveal ceremony's pictures (showmonpic reads vars).
+    gSpecialVar_0x8004 = GetMonData(&gPlayerParty[playerSlot], MON_DATA_SPECIES, NULL);
+    gSpecialVar_0x8005 = GetTrainerMonSpecies(trainerId, ante->enemySlot);
+
     // The stake is on disk before the battle resolves: resetting after a
     // loss reloads into a save where this ante is already committed.
     TrySavingData(SAVE_NORMAL);
