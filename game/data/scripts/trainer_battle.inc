@@ -48,6 +48,7 @@ EventScript_DoNoIntroTrainerBattle::
 	goto_if_questlog EventScript_EndQuestLogBattle
 	call EventScript_AnteCommitAndReveal
 	dotrainerbattle
+	call EventScript_AnteRegisterWonMon
 	gotopostbattlescript
 
 EventScript_TryDoRematchBattle::
