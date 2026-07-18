@@ -17,6 +17,7 @@ static u16 GetTrainerMonSpecies(u16 trainerId, u8 slot);
 static void AnteGiveMonToPlayer(struct Pokemon *mon);
 static void RecordBounty(struct Pokemon *mon, u16 trainerId);
 static u8 GetBadgeCount(void);
+static void WithdrawFirstStoredMon(void);
 
 static u16 CountOwnedMons(void)
 {
@@ -80,7 +81,8 @@ u16 AnteCommit(void)
     u8 enemyCount = gTrainers[trainerId].partySize;
     u8 playerSlot = DrawPlayerAnteSlot();
 
-    if (playerSlot == ANTE_SLOT_NONE || enemyCount == 0)
+    // Ownership floor: the player may never stake their last Pokémon.
+    if (playerSlot == ANTE_SLOT_NONE || enemyCount == 0 || CountOwnedMons() < 2)
     {
         ante->committed = FALSE;
         return FALSE;
@@ -176,6 +178,29 @@ void Ante_HandleTrainerBattleEnd(bool8 playerWon)
         RecordBounty(&gPlayerParty[ante->playerSlot], gTrainerBattleOpponent_A);
         ZeroMonData(&gPlayerParty[ante->playerSlot]);
         CompactPartySlots();
-        CalculatePlayerPartyCount();
+        if (CalculatePlayerPartyCount() == 0)
+            WithdrawFirstStoredMon();
+    }
+}
+
+// Losing the last party member with others still in storage would leave an
+// empty party; the ownership floor guarantees at least one Pokémon exists
+// somewhere, so pull the first stored one into the party.
+static void WithdrawFirstStoredMon(void)
+{
+    u32 box, pos;
+
+    for (box = 0; box < TOTAL_BOXES_COUNT; box++)
+    {
+        for (pos = 0; pos < IN_BOX_COUNT; pos++)
+        {
+            if (GetBoxMonDataAt(box, pos, MON_DATA_SPECIES) != SPECIES_NONE)
+            {
+                BoxMonToMon(GetBoxedMonPtr(box, pos), &gPlayerParty[0]);
+                ZeroBoxMonAt(box, pos);
+                gPlayerPartyCount = 1;
+                return;
+            }
+        }
     }
 }
