@@ -33,6 +33,14 @@ static void EnsureUniqueNickname(struct Pokemon *mon);
 // script can run the Registry naming prompt after the battle ends.
 static EWRAM_DATA u8 sLastWonPartySlot = 0;
 
+// MTG rule: antes are set aside for the duration of the battle. Both
+// stakes are pulled from their parties at battle start and held here;
+// settlement decides where they go. RAM-only is safe: the autosave at
+// commit keeps the full party, and a mid-battle reset simply abandons
+// the un-fought battle (the next battle recommits fresh).
+static EWRAM_DATA struct Pokemon sPlayerStake = {};
+static EWRAM_DATA struct Pokemon sEnemyStake = {};
+
 static u16 CountOwnedMons(void)
 {
     u16 count = CalculatePlayerPartyCount();
@@ -123,15 +131,33 @@ static u16 GetTrainerMonSpecies(u16 trainerId, u8 slot)
 // gTrainerBattleOpponent_A and buffers their names for the reveal message
 // (player's in gStringVar1, opponent's in gStringVar2). Returns TRUE if the
 // battle is an ante battle, FALSE if it must be played friendly.
+static u8 CountBattleReadyPartyMons(void)
+{
+    u8 count = 0;
+    u32 i;
+
+    for (i = 0; i < PARTY_SIZE; i++)
+    {
+        if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES, NULL) != SPECIES_NONE
+         && !GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG, NULL))
+            count++;
+    }
+    return count;
+}
+
 u16 AnteCommit(void)
 {
     struct AnteSaveData *ante = &gSaveBlock1Ptr->ante;
     u16 trainerId = gTrainerBattleOpponent_A;
     u8 enemyCount = gTrainers[trainerId].partySize;
     u8 playerSlot = DrawPlayerAnteSlot();
+    u8 partyMinimum = gTrainers[trainerId].doubleBattle ? 3 : 2;
 
-    // Ownership floor: the player may never stake their last Pokémon.
-    if (playerSlot == ANTE_SLOT_NONE || enemyCount == 0 || CountOwnedMons() < 2)
+    // Antes are set aside for the battle, so both sides must still be able
+    // to field a team afterward: the player needs a spare beyond the stake
+    // (two spares for double battles), and so does the opponent.
+    if (playerSlot == ANTE_SLOT_NONE || enemyCount < 2
+     || CountBattleReadyPartyMons() < partyMinimum)
     {
         ante->committed = FALSE;
         return FALSE;
@@ -352,10 +378,58 @@ static void RecordBounty(struct Pokemon *mon, u16 trainerId)
     ante->bounties[slot].badgesAtLoss = GetBadgeCount();
 }
 
-// Called from the trainer battle end callbacks. Settles the committed ante:
-// on a win the opponent's staked Pokémon joins the player (party if there is
-// room, storage otherwise); on a loss the player's staked Pokémon is removed
-// and recorded as a bounty held by the winning trainer.
+// Called from StartTrainerBattle/StartRematchBattle after the autosave-
+// carrying commit: pulls the player's stake out of the party for the
+// duration of the battle (MTG rule — the ante is set aside).
+void Ante_BenchPlayerStake(void)
+{
+    struct AnteSaveData *ante = &gSaveBlock1Ptr->ante;
+
+    if (!ante->committed)
+        return;
+    CopyMon(&sPlayerStake, &gPlayerParty[ante->playerSlot], sizeof(sPlayerStake));
+    ZeroMonData(&gPlayerParty[ante->playerSlot]);
+    CompactPartySlots();
+    CalculatePlayerPartyCount();
+}
+
+// Called right after the enemy trainer party is generated: pulls their
+// stake out so they also fight without it.
+void Ante_OnEnemyPartyCreated(void)
+{
+    struct AnteSaveData *ante = &gSaveBlock1Ptr->ante;
+    s32 i;
+
+    if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER) || !ante->committed)
+        return;
+    CopyMon(&sEnemyStake, &gEnemyParty[ante->enemySlot], sizeof(sEnemyStake));
+    for (i = ante->enemySlot; i < PARTY_SIZE - 1; i++)
+        CopyMon(&gEnemyParty[i], &gEnemyParty[i + 1], sizeof(struct Pokemon));
+    ZeroMonData(&gEnemyParty[PARTY_SIZE - 1]);
+    CalculateEnemyPartyCount();
+}
+
+static void ReturnPlayerStakeToParty(void)
+{
+    s32 i;
+
+    for (i = 0; i < PARTY_SIZE; i++)
+    {
+        if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES, NULL) == SPECIES_NONE)
+            break;
+    }
+    if (i < PARTY_SIZE)
+    {
+        CopyMon(&gPlayerParty[i], &sPlayerStake, sizeof(struct Pokemon));
+        gPlayerPartyCount = i + 1;
+    }
+}
+
+// Called from the trainer battle end callbacks. Settles the committed
+// ante: on a win the player's stake returns and the opponent's set-aside
+// stake joins them (party if there is room, storage otherwise); on a loss
+// the player's stake is recorded as a bounty held by the winning trainer.
+// The settlement is saved immediately so a reset cannot undo a loss.
 void Ante_HandleTrainerBattleEnd(bool8 playerWon)
 {
     struct AnteSaveData *ante = &gSaveBlock1Ptr->ante;
@@ -366,19 +440,19 @@ void Ante_HandleTrainerBattleEnd(bool8 playerWon)
 
     if (playerWon)
     {
-        struct Pokemon *mon = &gEnemyParty[ante->enemySlot];
-
-        if (GetMonData(mon, MON_DATA_SPECIES, NULL) != SPECIES_NONE)
-            AnteGiveMonToPlayer(mon);
+        ReturnPlayerStakeToParty();
+        if (GetMonData(&sEnemyStake, MON_DATA_SPECIES, NULL) != SPECIES_NONE)
+            AnteGiveMonToPlayer(&sEnemyStake);
     }
     else
     {
-        RecordBounty(&gPlayerParty[ante->playerSlot], gTrainerBattleOpponent_A);
-        ZeroMonData(&gPlayerParty[ante->playerSlot]);
-        CompactPartySlots();
+        RecordBounty(&sPlayerStake, gTrainerBattleOpponent_A);
         if (CalculatePlayerPartyCount() == 0)
             WithdrawFirstStoredMon();
     }
+    ZeroMonData(&sPlayerStake);
+    ZeroMonData(&sEnemyStake);
+    TrySavingData(SAVE_NORMAL);
 }
 
 // Losing the last party member with others still in storage would leave an

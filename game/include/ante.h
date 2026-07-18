@@ -9,6 +9,8 @@
 #define ANTE_SLOT_NONE 0xFF
 
 u16 AnteCommit(void);
+void Ante_BenchPlayerStake(void);
+void Ante_OnEnemyPartyCreated(void);
 void Ante_HandleTrainerBattleEnd(bool8 playerWon);
 
 #endif // GUARD_ANTE_H

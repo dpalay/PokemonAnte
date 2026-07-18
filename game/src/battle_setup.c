@@ -900,6 +900,7 @@ void StartTrainerBattle(void)
     if (GetTrainerBattleMode() == TRAINER_BATTLE_EARLY_RIVAL && GetRivalBattleFlags() & RIVAL_BATTLE_TUTORIAL)
         gBattleTypeFlags |= BATTLE_TYPE_FIRST_BATTLE;
     gMain.savedCallback = CB2_EndTrainerBattle;
+    Ante_BenchPlayerStake();
     DoTrainerBattle();
     ScriptContext_Stop();
 }
@@ -979,6 +980,7 @@ void StartRematchBattle(void)
 {
     gBattleTypeFlags = BATTLE_TYPE_TRAINER;
     gMain.savedCallback = CB2_EndRematchBattle;
+    Ante_BenchPlayerStake();
     DoTrainerBattle();
     ScriptContext_Stop();
 }

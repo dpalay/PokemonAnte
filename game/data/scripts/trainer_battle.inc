@@ -131,7 +131,9 @@ EventScript_AnteRevealDone::
 	return
 
 Text_AnteReveal::
-	.string "Both sides put up an ANTE!$"
+	.string "Both sides put up an ANTE!\p"
+	.string "The stakes are set aside.\n"
+	.string "Winner takes both!$"
 
 Text_AnteStakeYours::
 	.string "You stake {STR_VAR_1}!$"

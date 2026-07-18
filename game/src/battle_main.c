@@ -9,6 +9,7 @@
 #include "battle_message.h"
 #include "battle_scripts.h"
 #include "battle_setup.h"
+#include "ante.h"
 #include "berry.h"
 #include "data.h"
 #include "decompress.h"
@@ -705,6 +706,7 @@ static void CB2_InitBattleInternal(void)
     if (!(gBattleTypeFlags & BATTLE_TYPE_LINK))
     {
         CreateNPCTrainerParty(&gEnemyParty[0], gTrainerBattleOpponent_A);
+        Ante_OnEnemyPartyCreated();
         SetWildMonHeldItem();
     }
 
