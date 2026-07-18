@@ -49,9 +49,15 @@ Pokémon, and the winner takes the loser's stake.
   money sink competing with packs. You start with 2 pages (12 slots).
   Winning an ante at full capacity forces an immediate choice: sell the
   winnings on the spot, or release/sell something to make room.
-- **Ownership floor:** you may never stake your last Pokémon. Ante battles
-  require owning at least 2 total (deck + binder). At 1, battles are
-  friendly only, and the Professor's Fund kicks in (see Economy).
+- **Ownership floor + Fund rescue:** you may never stake your last
+  Pokémon — ante battles require owning at least 2 total (deck + binder).
+  Busting down to 1 is **a rescue, not a fail state**: at the next heal
+  (whiteout or nurse visit) the Registry flags your file and the
+  Professor's Fund delivers a ranch common, registered like any
+  acquisition. Rock bottom is a scripted comeback beat — no game-over,
+  and no lingering floor state (which would otherwise invite risk-free
+  friendly-battle farming at 1 owned Pokémon). The pity-priced Starter
+  Pack remains the self-serve floor once shops exist.
 - **Names are the Registry key — mandatory and unique.** Every
   acquisition (starter, pull, won ante) must be registered under a name
   no other Pokémon carries; the naming screen loops until the Registry
