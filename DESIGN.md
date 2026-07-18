@@ -24,9 +24,15 @@ Pokémon, and the winner takes the loser's stake.
   (see World). At battle start, both sides randomly reveal one Pokémon from
   their deck as their ante — before turn one. Winner keeps their own ante
   and takes the loser's.
-- **The anted Pokémon fights.** It is not set aside (a deliberate break
-  from MTG): your staked Pokémon can end up battling for its own freedom,
-  and dead-weight deck slots weaken you.
+- **The antes are set aside** (the MTG rule, restored after playtesting).
+  Both stakes leave their parties for the duration of the battle and sit
+  in the pot; the winner takes both back. Consequences: every ante battle
+  is fought a Pokémon down on each side, so **ante battles require both
+  sides to field 2+ Pokémon beyond nothing** (3+ for the player in double
+  battles) — one-mon trainers play friendly until restocking fills their
+  parties. An earlier draft had the ante fight in its own battle; it was
+  reversed for MTG fidelity and clarity — "which Pokémon can I not use
+  this fight" is cleaner tension than a stake that battles for itself.
 - **Losing costs exactly the ante, never more.** Ante loss replaces the
   vanilla half-money whiteout penalty. Losing does NOT mark a trainer
   beaten — rematches must stay open. Fleeing or conceding forfeits the
@@ -352,6 +358,12 @@ post-champion scolding scene plays as a man watching his history repeat.
   fair and the floor deterministic-at-a-price.
 
 ## Decisions log (formerly open questions)
+
+- **Reversed after playtesting: antes are set aside, MTG-style.** The
+  "anted Pokémon fights" rule shipped in Phase 1, read as a bug in play,
+  and lost to the original card rule. Both stakes leave their parties at
+  battle start; ante battles need 2+ fielded per side (3+ for player
+  doubles); settlement saves immediately so a reset can't undo a loss.
 
 - Format level table: fixed above; no EXP; evolution at thresholds.
 - Binder: start 12 slots, max 30 (5×6); pages 10k/25k/50k.
