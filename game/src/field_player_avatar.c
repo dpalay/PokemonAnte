@@ -513,7 +513,9 @@ static void PlayerNotOnBikeMoving(u8 direction, u16 heldKeys)
         return;
     }
 
-    if ((heldKeys & B_BUTTON) && FlagGet(FLAG_SYS_B_DASH)
+    // QoL: auto-run. Running is the default from the start of the game
+    // wherever it's allowed; holding B walks instead.
+    if (!(heldKeys & B_BUTTON)
         && !IsRunningDisallowed(gObjectEvents[gPlayerAvatar.objectEventId].currentMetatileBehavior))
     {
         if (PlayerIsMovingOnRockStairs(direction))
