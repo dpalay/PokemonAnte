@@ -1126,16 +1126,58 @@ PalletTown_ProfessorOaksLab_EventScript_ChoseStarter::
 	waitmessage
 	playfanfare MUS_OBTAIN_KEY_ITEM
 	waitfanfare
-	msgbox Text_GiveNicknameToThisMon, MSGBOX_YESNO
-	goto_if_eq VAR_RESULT, YES, EventScript_GiveNicknameToStarter
-	goto_if_eq VAR_RESULT, NO, PalletTown_ProfessorOaksLab_EventScript_RivalPicksStarter
+	msgbox PalletTown_ProfessorOaksLab_Text_RegisterStarter, MSGBOX_DEFAULT
+	goto EventScript_GiveNicknameToStarter
 	end
 
+@ Pokémon Ante: registration is mandatory — the name is the Registry key,
+@ and no two Pokémon may share one.
 EventScript_GiveNicknameToStarter::
 	setvar VAR_0x8004, 0
+EventScript_StarterNameLoop::
 	call EventScript_ChangePokemonNickname
-	goto PalletTown_ProfessorOaksLab_EventScript_RivalPicksStarter
-	end
+	specialvar VAR_RESULT, AnteIsPartyMonNameValid
+	goto_if_eq VAR_RESULT, TRUE, EventScript_GiveCompanionMon
+	msgbox Text_AnteNameRejected, MSGBOX_DEFAULT
+	goto EventScript_StarterNameLoop
+
+@ A second Pokémon from the lab ranch: with only one, the ownership floor
+@ would keep every battle friendly and the player would never see an ante.
+EventScript_GiveCompanionMon::
+	givemon SPECIES_PIDGEY, 4
+	bufferspeciesname STR_VAR_1, SPECIES_PIDGEY
+	playfanfare MUS_LEVEL_UP
+	message PalletTown_ProfessorOaksLab_Text_ReceivedCompanion
+	waitmessage
+	waitfanfare
+	msgbox PalletTown_ProfessorOaksLab_Text_CompanionExplanation, MSGBOX_DEFAULT
+	setvar VAR_0x8004, 1
+EventScript_CompanionNameLoop::
+	call EventScript_ChangePokemonNickname
+	specialvar VAR_RESULT, AnteIsPartyMonNameValid
+	goto_if_eq VAR_RESULT, TRUE, PalletTown_ProfessorOaksLab_EventScript_RivalPicksStarter
+	msgbox Text_AnteNameRejected, MSGBOX_DEFAULT
+	goto EventScript_CompanionNameLoop
+
+PalletTown_ProfessorOaksLab_Text_RegisterStarter::
+	.string "Every POKéMON in this region must\n"
+	.string "be registered under its own name.\p"
+	.string "No two may share one - that is how\n"
+	.string "the REGISTRY stays true.\p"
+	.string "Give your partner its name!$"
+
+PalletTown_ProfessorOaksLab_Text_ReceivedCompanion::
+	.string "{PLAYER} received a {STR_VAR_1}\n"
+	.string "from the lab ranch!$"
+
+PalletTown_ProfessorOaksLab_Text_CompanionExplanation::
+	.string "Take this one from my ranch\n"
+	.string "as well.\p"
+	.string "The old rules are cruel to those\n"
+	.string "who own a single POKéMON…\p"
+	.string "You can't ante what you can't\n"
+	.string "afford to lose!\p"
+	.string "It needs its name, too.$"
 
 PalletTown_ProfessorOaksLab_EventScript_RivalPicksStarter::
 	closemessage
