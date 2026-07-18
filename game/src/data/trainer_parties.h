@@ -3723,6 +3723,11 @@ static const struct TrainerMonNoItemDefaultMoves sParty_RivalOaksLabSquirtle[] =
         .lvl = 5,
         .species = SPECIES_SQUIRTLE,
     },
+    {
+        .iv = 0,
+        .lvl = 4,
+        .species = SPECIES_SPEAROW,
+    },
 };
 
 static const struct TrainerMonNoItemDefaultMoves sParty_RivalOaksLabBulbasaur[] = {
@@ -3731,6 +3736,11 @@ static const struct TrainerMonNoItemDefaultMoves sParty_RivalOaksLabBulbasaur[] 
         .lvl = 5,
         .species = SPECIES_BULBASAUR,
     },
+    {
+        .iv = 0,
+        .lvl = 4,
+        .species = SPECIES_SPEAROW,
+    },
 };
 
 static const struct TrainerMonNoItemDefaultMoves sParty_RivalOaksLabCharmander[] = {
@@ -3738,6 +3748,11 @@ static const struct TrainerMonNoItemDefaultMoves sParty_RivalOaksLabCharmander[]
         .iv = 0,
         .lvl = 5,
         .species = SPECIES_CHARMANDER,
+    },
+    {
+        .iv = 0,
+        .lvl = 4,
+        .species = SPECIES_SPEAROW,
     },
 };
 

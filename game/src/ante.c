@@ -1,6 +1,7 @@
 #include "global.h"
 #include "ante.h"
 #include "battle.h"
+#include "battle_setup.h"
 #include "data.h"
 #include "event_data.h"
 #include "pokemon.h"
@@ -11,6 +12,7 @@
 #include "party_menu.h"
 #include "script_pokemon_util.h"
 #include "characters.h"
+#include "constants/battle_setup.h"
 #include "constants/flags.h"
 #include "constants/items.h"
 #include "constants/pokemon.h"
@@ -18,6 +20,7 @@
 
 static u16 CountOwnedMons(void);
 static u8 DrawPlayerAnteSlot(void);
+static u8 DrawEnemyAnteSlot(u16 trainerId);
 static u16 GetTrainerMonSpecies(u16 trainerId, u8 slot);
 static void AnteGiveMonToPlayer(struct Pokemon *mon);
 static void RecordBounty(struct Pokemon *mon, u16 trainerId);
@@ -46,20 +49,55 @@ static u16 CountOwnedMons(void)
     return count;
 }
 
+static bool8 IsStarterSpecies(u16 species)
+{
+    return species == SPECIES_BULBASAUR
+        || species == SPECIES_CHARMANDER
+        || species == SPECIES_SQUIRTLE;
+}
+
+// The first rival battle is rigged: neither side's starter may be drawn.
+// Losing your partner to your rival in the first ten minutes is a thesis
+// statement, but it's the wrong one to make before the player can rematch.
+static bool8 AnteExcludesStarters(void)
+{
+    return GetTrainerBattleMode() == TRAINER_BATTLE_EARLY_RIVAL;
+}
+
 static u8 DrawPlayerAnteSlot(void)
 {
     u8 validSlots[PARTY_SIZE];
     u8 numValid = 0;
+    bool8 noStarters = AnteExcludesStarters();
     u32 i;
 
     for (i = 0; i < PARTY_SIZE; i++)
     {
         if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES, NULL) != SPECIES_NONE
-         && !GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG, NULL))
+         && !GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG, NULL)
+         && !(noStarters && IsStarterSpecies(GetMonData(&gPlayerParty[i], MON_DATA_SPECIES, NULL))))
             validSlots[numValid++] = i;
     }
     if (numValid == 0)
         return ANTE_SLOT_NONE;
+    return validSlots[Random() % numValid];
+}
+
+static u8 DrawEnemyAnteSlot(u16 trainerId)
+{
+    u8 validSlots[PARTY_SIZE];
+    u8 numValid = 0;
+    u8 count = gTrainers[trainerId].partySize;
+    bool8 noStarters = AnteExcludesStarters();
+    u32 i;
+
+    for (i = 0; i < count; i++)
+    {
+        if (!(noStarters && IsStarterSpecies(GetTrainerMonSpecies(trainerId, i))))
+            validSlots[numValid++] = i;
+    }
+    if (numValid == 0)
+        return Random() % count;
     return validSlots[Random() % numValid];
 }
 
@@ -100,7 +138,7 @@ u16 AnteCommit(void)
     }
 
     ante->playerSlot = playerSlot;
-    ante->enemySlot = Random() % enemyCount;
+    ante->enemySlot = DrawEnemyAnteSlot(trainerId);
     ante->committed = TRUE;
 
     GetMonNickname(&gPlayerParty[playerSlot], gStringVar1);
