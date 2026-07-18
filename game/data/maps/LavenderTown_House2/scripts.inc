@@ -48,13 +48,22 @@ LavenderTown_House2_EventScript_CantNicknameTradeMon::
 
 LavenderTown_House2_EventScript_ChooseNewNickname::
 	msgbox LavenderTown_House2_Text_WhatShallNewNicknameBe
+LavenderTown_House2_EventScript_RegistryNameLoop::
 	call EventScript_ChangePokemonNickname
+	specialvar VAR_RESULT, AnteIsPartyMonNameValid
+	goto_if_eq VAR_RESULT, FALSE, LavenderTown_House2_EventScript_RegistryReject
 	specialvar VAR_RESULT, NameRaterWasNicknameChanged
 	special BufferMonNickname
 	goto_if_eq VAR_RESULT, TRUE, LavenderTown_House2_EventScript_ChoseNewNickname
 	msgbox LavenderTown_House2_Text_FromNowOnShallBeKnownAsSameName
 	release
 	end
+
+@ Pokémon Ante: the Name Rater is the Registry's clerk — he cannot file
+@ a name another Pokémon already carries.
+LavenderTown_House2_EventScript_RegistryReject::
+	msgbox Text_AnteNameRejected, MSGBOX_DEFAULT
+	goto LavenderTown_House2_EventScript_RegistryNameLoop
 
 LavenderTown_House2_EventScript_ChoseNewNickname::
 	msgbox LavenderTown_House2_Text_FromNowOnShallBeKnownAsName
