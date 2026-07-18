@@ -202,10 +202,16 @@ gOakSpeech_Text_IsInhabitedFarAndWide::
     .string "creatures called POKéMON.\p$"
 
 gOakSpeech_Text_IStudyPokemon::
-    .string "For some people, POKéMON are pets.\n"
-    .string "Others use them for battling.\p"
+    .string "In this region, we battle by\n"
+    .string "the old rules.\p"
+    .string "Every battle has an ANTE…\p"
+    .string "Both sides stake one of their own\n"
+    .string "POKéMON, and the winner keeps both!\p"
+    .string "Wild POKéMON won't heed a TRAINER\n"
+    .string "here. What you win is what you have.\p"
     .string "As for myself…\p"
-    .string "I study POKéMON as a profession.\p$"
+    .string "I keep the REGISTRY, the ledger of\n"
+    .string "every POKéMON and its owner.\p$"
 
 gOakSpeech_Text_TellMeALittleAboutYourself::
     .string "But first, tell me a little about\n"
