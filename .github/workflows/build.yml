@@ -4,6 +4,9 @@ on:
   push:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     name: Build and verify ROM
@@ -47,3 +50,19 @@ jobs:
           path: game/pokefirered.gba
           retention-days: 7
           if-no-files-found: error
+
+      # Rolling pre-release so the latest playtest build is one click from
+      # the repo front page — no digging through Actions runs.
+      - name: Update rolling release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp game/pokefirered.gba pokemon-ante-latest.gba
+          gh release view latest-build --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 || \
+            gh release create latest-build --repo "$GITHUB_REPOSITORY" \
+              --prerelease --title "Latest playtest build" \
+              --notes "Rolling build of the most recent push."
+          gh release upload latest-build pokemon-ante-latest.gba \
+            --repo "$GITHUB_REPOSITORY" --clobber
+          gh release edit latest-build --repo "$GITHUB_REPOSITORY" \
+            --notes "Rolling playtest build. Commit: ${GITHUB_SHA} (${GITHUB_REF_NAME}). $(date -u +%Y-%m-%dT%H:%MZ)"
