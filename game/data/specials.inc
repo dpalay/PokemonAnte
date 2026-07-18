@@ -455,4 +455,5 @@ gSpecials::
 	def_special AnteCommit
 	def_special AnteIsPartyMonNameValid
 	def_special AnteGetLastWonPartySlot
+	def_special AnteTryFundRescue
 gSpecialsEnd::

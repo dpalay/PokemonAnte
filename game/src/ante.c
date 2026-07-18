@@ -9,8 +9,11 @@
 #include "save.h"
 #include "string_util.h"
 #include "party_menu.h"
+#include "script_pokemon_util.h"
 #include "characters.h"
 #include "constants/flags.h"
+#include "constants/items.h"
+#include "constants/pokemon.h"
 #include "constants/species.h"
 
 static u16 CountOwnedMons(void);
@@ -202,6 +205,40 @@ u16 AnteIsPartyMonNameValid(void)
     if (name[0] == EOS)
         return FALSE;
     return !IsNicknameInUse(name, mon);
+}
+
+// Ranch commons the Professor's Fund sends to a trainer who has busted
+// down to their last Pokémon.
+static const u16 sFundRanchSpecies[] = {
+    SPECIES_RATTATA,
+    SPECIES_PIDGEY,
+    SPECIES_NIDORAN_M,
+    SPECIES_NIDORAN_F,
+    SPECIES_ODDISH,
+    SPECIES_MEOWTH,
+};
+
+// Script special. Rock bottom is a rescue, not a fail state: if the player
+// owns exactly one Pokémon, the Fund delivers a ranch common. Returns TRUE
+// and buffers the species name in gStringVar1; the new mon's slot is
+// exposed through AnteGetLastWonPartySlot for the registration prompt.
+u16 AnteTryFundRescue(void)
+{
+    u16 species;
+    u8 slot;
+
+    if (CountOwnedMons() != 1)
+        return FALSE;
+
+    species = sFundRanchSpecies[Random() % ARRAY_COUNT(sFundRanchSpecies)];
+    if (ScriptGiveMon(species, 5, ITEM_NONE, 0, 0, 0) != MON_GIVEN_TO_PARTY)
+        return FALSE;
+
+    slot = gPlayerPartyCount - 1;
+    EnsureUniqueNickname(&gPlayerParty[slot]);
+    sLastWonPartySlot = slot + 1;
+    StringCopy(gStringVar1, gSpeciesNames[species]);
+    return TRUE;
 }
 
 // Script special. Party slot of the ante won in the battle that just
