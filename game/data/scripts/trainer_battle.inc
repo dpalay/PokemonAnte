@@ -63,6 +63,7 @@ EventScript_TryDoRematchBattle::
 	call EventScript_AnteCommitAndReveal
 	special StartRematchBattle
 	waitstate
+	call EventScript_AnteRegisterWonMon
 	releaseall
 	end
 
@@ -83,6 +84,7 @@ EventScript_TryDoDoubleRematchBattle::
 	call EventScript_AnteCommitAndReveal
 	special StartRematchBattle
 	waitstate
+	call EventScript_AnteRegisterWonMon
 	releaseall
 	end
 
@@ -136,6 +138,31 @@ Text_AnteStakeYours::
 Text_AnteStakeTheirs::
 	.string "Your opponent stakes {STR_VAR_2}!$"
 
+@ Pokémon Ante: every acquisition must be registered under a unique name.
+@ Runs after a battle whose ante was won into the party; loops the naming
+@ screen until the Registry accepts the name.
+EventScript_AnteRegisterWonMon::
+	specialvar VAR_RESULT, AnteGetLastWonPartySlot
+	goto_if_eq VAR_RESULT, 255, EventScript_AnteRegisterDone
+	copyvar VAR_0x8004, VAR_RESULT
+	msgbox Text_AnteRegisterNewMon, MSGBOX_DEFAULT
+EventScript_AnteRegisterPrompt::
+	call EventScript_ChangePokemonNickname
+	specialvar VAR_RESULT, AnteIsPartyMonNameValid
+	goto_if_eq VAR_RESULT, TRUE, EventScript_AnteRegisterDone
+	msgbox Text_AnteNameRejected, MSGBOX_DEFAULT
+	goto EventScript_AnteRegisterPrompt
+EventScript_AnteRegisterDone::
+	return
+
+Text_AnteRegisterNewMon::
+	.string "The POKéMON you won must be\n"
+	.string "registered under a unique name!$"
+
+Text_AnteNameRejected::
+	.string "That name is already on the\n"
+	.string "REGISTRY! It must have its own.$"
+
 EventScript_DoTrainerBattle::
 	special ShowTrainerIntroSpeech
 	waitmessage
@@ -150,6 +177,7 @@ EventScript_DoTrainerBattle::
 	goto_if_eq VAR_RESULT, TRAINER_BATTLE_CONTINUE_SCRIPT_DOUBLE, EventScript_EndTrainerBattleContinueScript
 	goto_if_eq VAR_RESULT, TRAINER_BATTLE_CONTINUE_SCRIPT_DOUBLE_NO_MUSIC, EventScript_EndTrainerBattleContinueScript
 EventScript_EndTrainerBattle::
+	call EventScript_AnteRegisterWonMon
 	releaseall
 	end
 
