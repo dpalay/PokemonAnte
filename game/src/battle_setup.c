@@ -25,6 +25,7 @@
 #include "vs_seeker.h"
 #include "battle.h"
 #include "battle_transition.h"
+#include "ante.h"
 #include "battle_controllers.h"
 #include "constants/battle_setup.h"
 #include "constants/event_objects.h"
@@ -905,6 +906,8 @@ void StartTrainerBattle(void)
 
 static void CB2_EndTrainerBattle(void)
 {
+    Ante_HandleTrainerBattleEnd(!IsPlayerDefeated(gBattleOutcome));
+
     if (sTrainerBattleMode == TRAINER_BATTLE_EARLY_RIVAL)
     {
         if (IsPlayerDefeated(gBattleOutcome) == TRUE)
@@ -953,6 +956,8 @@ static void CB2_EndTrainerBattle(void)
 
 static void CB2_EndRematchBattle(void)
 {
+    Ante_HandleTrainerBattleEnd(!IsPlayerDefeated(gBattleOutcome));
+
     if (gTrainerBattleOpponent_A == TRAINER_SECRET_BASE)
     {
         SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
