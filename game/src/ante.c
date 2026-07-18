@@ -6,6 +6,7 @@
 #include "pokemon.h"
 #include "pokemon_storage_system.h"
 #include "random.h"
+#include "save.h"
 #include "string_util.h"
 #include "party_menu.h"
 #include "constants/flags.h"
@@ -94,6 +95,10 @@ u16 AnteCommit(void)
 
     GetMonNickname(&gPlayerParty[playerSlot], gStringVar1);
     StringCopy(gStringVar2, gSpeciesNames[GetTrainerMonSpecies(trainerId, ante->enemySlot)]);
+
+    // The stake is on disk before the battle resolves: resetting after a
+    // loss reloads into a save where this ante is already committed.
+    TrySavingData(SAVE_NORMAL);
     return TRUE;
 }
 
