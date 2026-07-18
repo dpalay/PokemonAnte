@@ -52,10 +52,17 @@ Pokémon, and the winner takes the loser's stake.
 - **Ownership floor:** you may never stake your last Pokémon. Ante battles
   require owning at least 2 total (deck + binder). At 1, battles are
   friendly only, and the Professor's Fund kicks in (see Economy).
-- **Nickname clause:** every acquisition (starter, pull, won ante) prompts
-  a nickname. Mandatory in hardcore, skippable in casual. **OT and
-  nicknames persist across owners** — your binder is a trophy wall, and
-  the traded-Pokémon XP boost applies naturally.
+- **Names are the Registry key — mandatory and unique.** Every
+  acquisition (starter, pull, won ante) must be registered under a name
+  no other Pokémon carries; the naming screen loops until the Registry
+  accepts. Uniqueness spans party, storage, *and the bounty ledger* — a
+  lost Pokémon keeps its name reserved, or the ledger turns ambiguous.
+  Acquisitions that bypass the naming screen (a win sent straight to
+  storage) get an auto-numbered species name as a backstop, re-nameable
+  later. The **Name Rater is the Registry's clerk** and refuses
+  duplicate filings. **OT and names persist across owners** — your
+  binder is a trophy wall, and the traded-Pokémon XP boost applies
+  naturally.
 
 ### Format level (progression without grinding)
 
@@ -238,6 +245,10 @@ The professorship is the institution that tracks who owns what:
 - **The Professor's Fund** is his penance; the lab ranch takes in sold
   Pokémon; **the starters are the only three he kept** — one to you, one
   to his grandson.
+- **Oak starts you with two Pokémon**: the starter plus a companion from
+  the lab ranch. With one Pokémon the ownership floor keeps every battle
+  friendly, so a single-mon start would mute the game's core mechanic —
+  "you can't ante what you can't afford to lose."
 
 ### Team Rocket (prohibition profiteers)
 
