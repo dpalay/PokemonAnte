@@ -46,6 +46,7 @@ EventScript_DoNoIntroTrainerBattle::
 	waitmovement 0
 	special PlayTrainerEncounterMusic
 	goto_if_questlog EventScript_EndQuestLogBattle
+	call EventScript_AnteCommitAndReveal
 	dotrainerbattle
 	gotopostbattlescript
 
@@ -59,6 +60,7 @@ EventScript_TryDoRematchBattle::
 	waitmessage
 	waitbuttonpress
 	goto_if_questlog EventScript_EndQuestLogRematch
+	call EventScript_AnteCommitAndReveal
 	special StartRematchBattle
 	waitstate
 	releaseall
@@ -78,6 +80,7 @@ EventScript_TryDoDoubleRematchBattle::
 	waitmessage
 	waitbuttonpress
 	goto_if_questlog EventScript_EndQuestLogRematch
+	call EventScript_AnteCommitAndReveal
 	special StartRematchBattle
 	waitstate
 	releaseall
@@ -106,11 +109,26 @@ Movement_RevealTrainer::
 	reveal_trainer
 	step_end
 
+@ Pokémon Ante: draw both stakes and reveal them before the fight starts.
+@ AnteCommit returns FALSE when the battle must be played friendly (no ante).
+EventScript_AnteCommitAndReveal::
+	specialvar VAR_RESULT, AnteCommit
+	goto_if_eq VAR_RESULT, FALSE, EventScript_AnteRevealDone
+	msgbox Text_AnteReveal, MSGBOX_DEFAULT
+EventScript_AnteRevealDone::
+	return
+
+Text_AnteReveal::
+	.string "Both sides put up an ANTE!\p"
+	.string "You stake {STR_VAR_1}!\n"
+	.string "Your opponent stakes {STR_VAR_2}!$"
+
 EventScript_DoTrainerBattle::
 	special ShowTrainerIntroSpeech
 	waitmessage
 	waitbuttonpress
 	goto_if_questlog EventScript_EndQuestLogBattle
+	call EventScript_AnteCommitAndReveal
 	dotrainerbattle
 	specialvar VAR_RESULT, GetTrainerBattleMode
 	goto_if_eq VAR_RESULT, TRAINER_BATTLE_SINGLE, EventScript_EndTrainerBattle
