@@ -756,6 +756,28 @@ struct ExternalEventFlags
 
 } __attribute__((packed));/*size = 0x15*/
 
+// Pokémon Ante: a Pokémon lost to a trainer, tracked so it can be reclaimed later.
+struct AnteBounty
+{
+    u16 species; // SPECIES_NONE = empty slot
+    u16 holderTrainerId;
+    u32 personality;
+    u8 level;
+    u8 nickname[POKEMON_NAME_LENGTH + 1];
+    u8 badgesAtLoss;
+}; // 24 bytes
+
+#define ANTE_BOUNTY_COUNT 16
+
+struct AnteSaveData
+{
+    u8 committed; // antes drawn for a pending battle
+    u8 playerSlot;
+    u8 enemySlot;
+    u8 unused;
+    struct AnteBounty bounties[ANTE_BOUNTY_COUNT];
+}; // 388 bytes
+
 struct SaveBlock1
 {
     /*0x0000*/ struct Coords16 pos;
@@ -806,7 +828,8 @@ struct SaveBlock1
     /*0x30D0*/ struct Roamer roamer;
     /*0x30EC*/ struct EnigmaBerry enigmaBerry;
     /*0x3120*/ struct MysteryGiftSave mysteryGift;
-    /*0x348C*/ u8 unused_348C[400];
+    /*0x348C*/ struct AnteSaveData ante;
+    /*0x3610*/ u8 unused_348C[12];
     /*0x361C*/ struct RamScript ramScript;
     /*0x3A08*/ struct RecordMixingGift recordMixingGift; // unused
     /*0x3A18*/ u8 seen2[DEX_FLAGS_NO];

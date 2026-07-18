@@ -130,6 +130,7 @@ SECTIONS {
         src/field_fadetransition.o(.text);
         src/field_screen_effect.o(.text);
         src/battle_setup.o(.text);
+        src/ante.o(.text);
         src/cable_club.o(.text);
         src/trainer_see.o(.text);
         src/wild_encounter.o(.text);
@@ -454,6 +455,7 @@ SECTIONS {
         src/field_weather_effects.o(.rodata);
         src/field_screen_effect.o(.rodata);
         src/battle_setup.o(.rodata);
+        src/ante.o(.rodata);
         src/cable_club.o(.rodata);
         src/trainer_see.o(.rodata);
         src/wild_encounter.o(.rodata);

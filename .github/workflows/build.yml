@@ -31,7 +31,9 @@ jobs:
           ./build.sh
           ./install.sh "$GITHUB_WORKSPACE/game"
 
-      - name: Build ROM and verify checksum
+      # The hack intentionally diverges from the retail ROM, so there is no
+      # checksum to compare against; a successful build is the gate.
+      - name: Build ROM
         run: |
           cd game
-          make -j"$(nproc)" compare
+          make -j"$(nproc)"
