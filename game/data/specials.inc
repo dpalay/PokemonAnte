@@ -453,4 +453,6 @@ gSpecials::
 	def_special LoopWingFlapSound
 	def_special CreateEnemyEventMon
 	def_special AnteCommit
+	def_special AnteIsPartyMonNameValid
+	def_special AnteGetLastWonPartySlot
 gSpecialsEnd::
