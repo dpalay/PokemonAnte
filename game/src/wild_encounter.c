@@ -1,6 +1,7 @@
 #include "global.h"
 #include "random.h"
 #include "wild_encounter.h"
+#include "ante.h"
 #include "event_data.h"
 #include "fieldmap.h"
 #include "random.h"
@@ -357,6 +358,9 @@ bool8 StandardWildEncounter(u32 currMetatileAttrs, u16 previousMetatileBehavior)
     u16 headerId;
     struct Roamer * roamer;
 
+    if (ANTE_WILD_ENCOUNTERS_DISABLED)
+        return FALSE;
+
     if (sWildEncountersDisabled == TRUE)
         return FALSE;
 
@@ -445,7 +449,13 @@ bool8 StandardWildEncounter(u32 currMetatileAttrs, u16 previousMetatileBehavior)
 
 void RockSmashWildEncounter(void)
 {
-    u16 headerIdx = GetCurrentMapWildMonHeaderId();
+    u16 headerIdx;
+    if (ANTE_WILD_ENCOUNTERS_DISABLED)
+    {
+        gSpecialVar_Result = FALSE;
+        return;
+    }
+    headerIdx = GetCurrentMapWildMonHeaderId();
     if (headerIdx == HEADER_NONE)
         gSpecialVar_Result = FALSE;
     else if (gWildMonHeaders[headerIdx].rockSmashMonsInfo == NULL)
@@ -465,6 +475,9 @@ bool8 SweetScentWildEncounter(void)
 {
     s16 x, y;
     u16 headerId;
+
+    if (ANTE_WILD_ENCOUNTERS_DISABLED)
+        return FALSE;
 
     PlayerGetDestCoords(&x, &y);
     headerId = GetCurrentMapWildMonHeaderId();
@@ -508,7 +521,10 @@ bool8 SweetScentWildEncounter(void)
 
 bool8 DoesCurrentMapHaveFishingMons(void)
 {
-    u16 headerIdx = GetCurrentMapWildMonHeaderId();
+    u16 headerIdx;
+    if (ANTE_WILD_ENCOUNTERS_DISABLED)
+        return FALSE;
+    headerIdx = GetCurrentMapWildMonHeaderId();
     if (headerIdx == HEADER_NONE)
         return FALSE;
     if (gWildMonHeaders[headerIdx].fishingMonsInfo == NULL)
