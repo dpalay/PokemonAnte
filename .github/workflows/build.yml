@@ -37,3 +37,13 @@ jobs:
         run: |
           cd game
           make -j"$(nproc)"
+
+      # Short retention: artifacts are for playtesting builds, not
+      # distribution — long-term releases should ship as patch files.
+      - name: Upload ROM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pokemon-ante-${{ github.sha }}
+          path: game/pokefirered.gba
+          retention-days: 7
+          if-no-files-found: error
