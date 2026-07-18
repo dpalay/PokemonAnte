@@ -32,7 +32,7 @@ Route1_Text_AlIntro::
 	.string "Old rules! Ante up!$"
 
 Route1_Text_AlDefeat::
-	.string "Aww! There goes my RATTATA…$"
+	.string "Aww! There goes my ante…$"
 
 Route1_Text_AlPostBattle::
 	.string "Win some, lose some.\n"

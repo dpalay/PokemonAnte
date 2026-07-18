@@ -10882,6 +10882,11 @@ static const struct TrainerMonNoItemDefaultMoves sParty_AnteTesterAl[] = {
         .lvl = 3,
         .species = SPECIES_RATTATA,
     },
+    {
+        .iv = 0,
+        .lvl = 3,
+        .species = SPECIES_PIDGEY,
+    },
 };
 
 static const struct TrainerMonNoItemDefaultMoves sParty_AnteTesterBet[] = {
@@ -10907,5 +10912,10 @@ static const struct TrainerMonNoItemDefaultMoves sParty_AnteTesterCal[] = {
         .iv = 0,
         .lvl = 8,
         .species = SPECIES_MANKEY,
+    },
+    {
+        .iv = 0,
+        .lvl = 5,
+        .species = SPECIES_RATTATA,
     },
 };
