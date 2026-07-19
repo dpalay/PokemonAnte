@@ -257,13 +257,16 @@ The professorship is the institution that tracks who owns what:
 - **The Professor's Fund** is his penance; the lab ranch takes in sold
   Pokémon; **the starters are the only three he kept** — one to you, one
   to his grandson.
-- **Oak starts you with three Pokémon**: the starter plus two Pidgey from
-  the lab ranch. One Pokémon would mute the core mechanic entirely (the
-  floor makes everything friendly); two would mean the rival winning the
-  opening ante busts you straight to the Fund. Three keeps the first loss
-  survivable — "you can't ante what you can't afford to lose." Two of a
-  kind is deliberate: the second Pidgey can't keep its default name, so
-  the Registry's uniqueness rule teaches itself before Route 1.
+- **The game opens by cracking a Starter Pack.** Oak's three keepsake
+  starters are each sealed into a STARTER PACK holding three Pokémon:
+  the starter is the guaranteed card, plus two random pulls from the
+  ranch commons line (with a 1-in-32 rare slot — Pikachu tier). The
+  pack-opening ritual — reveal, cry, register — is the first thing the
+  game teaches, every fresh save opens differently, and a start of
+  three keeps the rival winning the opening ante survivable (a
+  two-Pokémon start would bust straight to the Fund). One Pokémon would
+  mute the core mechanic entirely; "you can't ante what you can't
+  afford to lose."
 
 ### Team Rocket (prohibition profiteers)
 

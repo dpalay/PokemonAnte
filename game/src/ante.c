@@ -282,6 +282,44 @@ static const u16 sFundRanchSpecies[] = {
     SPECIES_MEOWTH,
 };
 
+// The commons line of the STARTER PACK opened in Oak's lab.
+static const u16 sStarterPackCommons[] = {
+    SPECIES_PIDGEY,
+    SPECIES_RATTATA,
+    SPECIES_CATERPIE,
+    SPECIES_WEEDLE,
+    SPECIES_SPEAROW,
+    SPECIES_NIDORAN_M,
+    SPECIES_NIDORAN_F,
+    SPECIES_ODDISH,
+    SPECIES_MEOWTH,
+};
+
+// Script special. One pull from the starter pack: a ranch common, with a
+// 1-in-32 rare slot. Gives the Pokémon, buffers its species name in
+// gStringVar1 and species id in VAR_0x8005 (for showmonpic), and exposes
+// the party slot through AnteGetLastWonPartySlot for registration.
+u16 AntePullStarterPackMon(void)
+{
+    u16 species;
+    u8 slot;
+
+    if (Random() % 32 == 0)
+        species = SPECIES_PIKACHU;
+    else
+        species = sStarterPackCommons[Random() % ARRAY_COUNT(sStarterPackCommons)];
+
+    if (ScriptGiveMon(species, 4, ITEM_NONE, 0, 0, 0) != MON_GIVEN_TO_PARTY)
+        return FALSE;
+
+    slot = gPlayerPartyCount - 1;
+    EnsureUniqueNickname(&gPlayerParty[slot]);
+    sLastWonPartySlot = slot + 1;
+    StringCopy(gStringVar1, gSpeciesNames[species]);
+    gSpecialVar_0x8005 = species;
+    return TRUE;
+}
+
 // Script special. Rock bottom is a rescue, not a fail state: if the player
 // owns exactly one Pokémon, the Fund delivers a ranch common. Returns TRUE
 // and buffers the species name in gStringVar1; the new mon's slot is

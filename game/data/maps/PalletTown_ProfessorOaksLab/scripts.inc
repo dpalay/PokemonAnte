@@ -1137,46 +1137,32 @@ EventScript_GiveNicknameToStarter::
 EventScript_StarterNameLoop::
 	call EventScript_ChangePokemonNickname
 	specialvar VAR_RESULT, AnteIsPartyMonNameValid
-	goto_if_eq VAR_RESULT, TRUE, EventScript_GiveCompanionMon
+	goto_if_eq VAR_RESULT, TRUE, EventScript_OpenStarterPack
 	msgbox Text_AnteNameRejected, MSGBOX_DEFAULT
 	goto EventScript_StarterNameLoop
 
-@ A second Pokémon from the lab ranch: with only one, the ownership floor
-@ would keep every battle friendly and the player would never see an ante.
-EventScript_GiveCompanionMon::
-	givemon SPECIES_PIDGEY, 4
-	bufferspeciesname STR_VAR_1, SPECIES_PIDGEY
-	playfanfare MUS_LEVEL_UP
-	message PalletTown_ProfessorOaksLab_Text_ReceivedCompanion
-	waitmessage
-	waitfanfare
-	msgbox PalletTown_ProfessorOaksLab_Text_CompanionExplanation, MSGBOX_DEFAULT
-	setvar VAR_0x8004, 1
-EventScript_CompanionNameLoop::
-	call EventScript_ChangePokemonNickname
-	specialvar VAR_RESULT, AnteIsPartyMonNameValid
-	goto_if_eq VAR_RESULT, TRUE, EventScript_GiveSecondCompanion
-	msgbox Text_AnteNameRejected, MSGBOX_DEFAULT
-	goto EventScript_CompanionNameLoop
+@ The starter came sealed in a STARTER PACK holding three: the partner is
+@ the guaranteed card, plus two random pulls from the ranch line. The
+@ pack-opening ritual is the first thing the game teaches, and a start of
+@ three means the rival winning the opening ante can't bust the player
+@ straight down to the Fund.
+EventScript_OpenStarterPack::
+	msgbox PalletTown_ProfessorOaksLab_Text_RestOfPack, MSGBOX_DEFAULT
+	call EventScript_StarterPackPull
+	call EventScript_StarterPackPull
+	goto PalletTown_ProfessorOaksLab_EventScript_RivalPicksStarter
 
-@ A third Pokémon: if the rival wins the opening ante, the player must
-@ not bust straight down to the Fund. Two of a kind also teaches the
-@ Registry's uniqueness rule immediately - the second PIDGEY cannot
-@ keep the same name as the first.
-EventScript_GiveSecondCompanion::
-	givemon SPECIES_PIDGEY, 4
+EventScript_StarterPackPull::
+	specialvar VAR_RESULT, AntePullStarterPackMon
+	goto_if_eq VAR_RESULT, FALSE, EventScript_StarterPackPullDone
 	playfanfare MUS_LEVEL_UP
-	message PalletTown_ProfessorOaksLab_Text_ReceivedCompanion
-	waitmessage
+	showmonpic VAR_0x8005, 10, 3
+	msgbox PalletTown_ProfessorOaksLab_Text_PulledMon, MSGBOX_DEFAULT
 	waitfanfare
-	msgbox PalletTown_ProfessorOaksLab_Text_SecondCompanion, MSGBOX_DEFAULT
-	setvar VAR_0x8004, 2
-EventScript_SecondCompanionNameLoop::
-	call EventScript_ChangePokemonNickname
-	specialvar VAR_RESULT, AnteIsPartyMonNameValid
-	goto_if_eq VAR_RESULT, TRUE, PalletTown_ProfessorOaksLab_EventScript_RivalPicksStarter
-	msgbox Text_AnteNameRejected, MSGBOX_DEFAULT
-	goto EventScript_SecondCompanionNameLoop
+	hidemonpic
+	call EventScript_AnteRegisterWonMon
+EventScript_StarterPackPullDone::
+	return
 
 PalletTown_ProfessorOaksLab_Text_RegisterStarter::
 	.string "Every POKéMON in this region must\n"
@@ -1185,25 +1171,21 @@ PalletTown_ProfessorOaksLab_Text_RegisterStarter::
 	.string "the REGISTRY stays true.\p"
 	.string "Give your partner its name!$"
 
-PalletTown_ProfessorOaksLab_Text_ReceivedCompanion::
-	.string "{PLAYER} received a {STR_VAR_1}\n"
-	.string "from the lab ranch!$"
-
-PalletTown_ProfessorOaksLab_Text_CompanionExplanation::
-	.string "Take these two from my ranch\n"
-	.string "as well.\p"
+PalletTown_ProfessorOaksLab_Text_RestOfPack::
+	.string "Ah, but your partner didn't come\n"
+	.string "alone!\p"
+	.string "Every STARTER PACK is sealed\n"
+	.string "with three POKéMON inside.\p"
 	.string "The old rules are cruel to those\n"
-	.string "who own too few POKéMON…\p"
+	.string "who own too few…\p"
 	.string "You can't ante what you can't\n"
 	.string "afford to lose!\p"
-	.string "This first one needs its name.$"
+	.string "Now - let's see what fate sealed\n"
+	.string "in yours.$"
 
-PalletTown_ProfessorOaksLab_Text_SecondCompanion::
-	.string "And its nest-mate, too.\p"
-	.string "Yes, another PIDGEY - but the\n"
-	.string "REGISTRY sees no duplicates.\p"
-	.string "Even two of a kind must each\n"
-	.string "carry their own name!$"
+PalletTown_ProfessorOaksLab_Text_PulledMon::
+	.string "{PLAYER} pulled {STR_VAR_1}\n"
+	.string "from the STARTER PACK!$"
 
 PalletTown_ProfessorOaksLab_EventScript_RivalPicksStarter::
 	closemessage

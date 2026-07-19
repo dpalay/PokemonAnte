@@ -456,4 +456,5 @@ gSpecials::
 	def_special AnteIsPartyMonNameValid
 	def_special AnteGetLastWonPartySlot
 	def_special AnteTryFundRescue
+	def_special AntePullStarterPackMon
 gSpecialsEnd::
