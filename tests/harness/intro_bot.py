@@ -245,7 +245,9 @@ class IntroBot:
                     return all(ok for _, ok in self.checks)
                 self.do_overworld(tick)
                 continue
-            self.press(A)
+            # Menus, title, intro, cutscenes: alternate A with START (the
+            # title screen only advances on START; A alone loops the intro).
+            self.press(START if tick % 3 == 0 else A)
         print("BOT: TIMEOUT — last state dump follows", flush=True)
         print(f"  screen={self.screen()} pos={self.where()} "
               f"party={self.party_size()} names={self.nicknames()}", flush=True)
