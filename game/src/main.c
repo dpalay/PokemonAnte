@@ -293,9 +293,23 @@ void InitKeys(void)
     gMain.newKeysRaw = 0;
 }
 
+// Test-harness input mailbox: an external debugger (see tests/harness/ at
+// the repo root) can take over the joypad by writing TEST_INPUT_MAGIC and a
+// key mask here over mGBA's GDB stub. Inert unless the magic is written.
+struct TestInputMailbox
+{
+    vu32 magic;
+    vu16 keys;
+};
+EWRAM_DATA struct TestInputMailbox gTestInputMailbox = {0};
+#define TEST_INPUT_MAGIC 0x414E5445 // 'ANTE'
+
 static void ReadKeys(void)
 {
     u16 keyInput = REG_KEYINPUT ^ KEYS_MASK;
+
+    if (gTestInputMailbox.magic == TEST_INPUT_MAGIC)
+        keyInput = gTestInputMailbox.keys;
     gMain.newKeysRaw = keyInput & ~gMain.heldKeysRaw;
     gMain.newKeys = gMain.newKeysRaw;
     gMain.newAndRepeatedKeys = gMain.newKeysRaw;
